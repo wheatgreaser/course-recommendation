@@ -1,7 +1,23 @@
 {
   "1-1": [
     {
-      "subject": "BIOLOGY LABORATORY",
+      "subject": "COMPUTER PROGRAMMING",
+      "courseGrade": "10"
+    },
+    {
+      "subject": "PHYSICS LABORATORY",
+      "courseGrade": "10"
+    },
+    {
+      "subject": "CHEMISTRY LABORATORY",
+      "courseGrade": "10"
+    },
+    {
+      "subject": "MATHEMATICS I",
+      "courseGrade": "10"
+    },
+    {
+      "subject": "GENERAL CHEMISTRY",
       "courseGrade": "10"
     }
   ],

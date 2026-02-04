@@ -313,14 +313,7 @@ export default function MainFormScreen() {
     return;
   }
   const semesterCourses = allCourses[semester] || [];
-  const MAX_COURSES_PER_SEM = 8;
-  if (semesterCourses.length >= MAX_COURSES_PER_SEM) {
-    Alert.alert(
-      "Limit Reached",
-      `You can add at most ${MAX_COURSES_PER_SEM} courses per semester.`
-    );
-    return;
-  }
+
 
   const newCourse = { subject, courseGrade };
 

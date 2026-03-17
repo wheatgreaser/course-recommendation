@@ -1,0 +1,3 @@
+[submodule "recommendation-backend"]
+	path = recommendation-backend
+	url = https://github.com/wheatgreaser/recommendation-backend.git

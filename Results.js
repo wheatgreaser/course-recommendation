@@ -1,6 +1,7 @@
 // ResultsScreen.js
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
+
 import CsvTable from './CsvTable';
 const HIDDEN_COURSES = [
   "Course",
@@ -102,3 +103,4 @@ const styles = StyleSheet.create({
     color: '#3d246c'
   }
 });
+  

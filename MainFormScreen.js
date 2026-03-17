@@ -8,6 +8,7 @@ import i18n from './i18n/en.json';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
 import Papa from "papaparse";
+import { useCourse } from './CourseShare' 
 
 
 
@@ -291,7 +292,9 @@ export default function MainFormScreen() {
   const [semester, setSemester] = useState('1-1');
   const [subject, setSubject] = useState('');
   const [courseGrade, setGrade] = useState('10');
+  const [quizCourse, setQuizCourse] = useState();
   const [preferredElective, setPreferredElective] = useState('');
+  const [course, setCourse] = useCourse();
   const [allCourses, setAllCourses] = useState({});
   const [filteredSubjects, setFilteredSubjects] = useState(
     subjects.filter(shouldShowCourse)
@@ -626,6 +629,23 @@ const displayResults = (csv1Data, csv2Data, csv3Data, csv4Data, csv5Data, csv7Da
             value={preferredElective}
             onChangeText={(text) => setPreferredElective(text)}
           />
+        </View>          
+          <View style={styles.sectionCardFloating}>
+          <Text style={styles.sectionTitle}><Text style={styles.sectionIcon}>⭐</Text> Quiz for checking if you meet the necessary prerequisites</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter the course you want to take"
+            value={quizCourse}
+            onChangeText={(text) => setQuizCourse(text)}
+          />
+          <TouchableOpacity
+          style={styles.primaryButton}
+          onPress={() =>
+            navigation.navigate("Quiz", {course: quizCourse})
+          }
+        >
+          <Text style={styles.primaryButtonText}>Quiz</Text>
+        </TouchableOpacity>
         </View>
 
         {/* Submit Section */}

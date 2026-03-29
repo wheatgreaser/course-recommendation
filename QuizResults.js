@@ -7,7 +7,7 @@ async function sendToLLM(courseName, questions) {
     'http://10.0.2.2:11434/api/generate',
     {
       model: "deepseek-r1:7b",
-      prompt: `Recommend the user prerequisite university courses considering that they got the following questions wrong: ${questions}
+      prompt: `Recommend the user prerequisite university courses, course materials and textbooks considering that they got the following questions wrong: ${questions}
 
 Return ONLY the courses they should take in a JSON array format like this:
 {
@@ -16,7 +16,10 @@ Return ONLY the courses they should take in a JSON array format like this:
     "Topic 2",
     "Topic 3"
   ]
-}`
+}
+  Return ONLY valid JSON. No explanation. No extra text.
+If you cannot comply, return:
+{ "topics": [] }`
 ,
       stream: false,
       format: "json"
@@ -24,10 +27,24 @@ Return ONLY the courses they should take in a JSON array format like this:
   );
 
  
-console.log("LLM response:", response.data);
-return JSON.parse(response.data.response);
-}
+  console.log("LLM response:", response.data);
 
+  const parsed = safeParseJSON(response.data.response);
+
+  if (!parsed || !parsed.topics) {
+    throw new Error("Invalid LLM JSON");
+  }
+
+  return parsed;
+}
+function safeParseJSON(str) {
+  try {
+    return JSON.parse(str);
+  } catch (e) {
+    console.log("Raw LLM output:", str);
+    return null;
+  }
+}
 export default function QuizResults({ route }) {
   const { course, wrongQuestions } = route.params;
 
@@ -63,7 +80,11 @@ export default function QuizResults({ route }) {
       <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 20 }}>
         {course} learning recommendations
       </Text>
-
+      {wrongQuestions.length < 3 && (
+        <Text style={{ marginBottom: 15 }}>
+          You can take the course {course} directly, but reviewing these topics will help you get the most out of it:
+        </Text>
+      )}
       {recs.topics.map((topic, index) => (
         <View key={index} style={{ marginBottom: 25 }}>
           <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>

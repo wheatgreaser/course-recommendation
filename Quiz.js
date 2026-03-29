@@ -8,7 +8,7 @@ async function sendToLLM(courseName) {
     'http://10.0.2.2:11434/api/generate',
     {
       model: "deepseek-r1:7b",
-      prompt: `Generate a 10 question multiple choice quiz for checking if the user has the necessary prerequisite knowledge (ONLY basic stuff, not topics to be covered in the course itself) for the course ${courseName}.
+      prompt: `Generate a 10 question multiple choice quiz for checking if the user has the necessary prior knowledge for the topic: ${courseName}. NOTE: the questions should not be from the topic itself but rather from prerequisite topics. Each question should have 4 options with only one correct answer.
 
 Return ONLY valid JSON in this format:
 
@@ -26,9 +26,31 @@ Return ONLY valid JSON in this format:
       format: "json"
     }
   );
-    console.log("LLM response:", response.data.response);
+  console.log("LLM response:", response.data);
 
-    return JSON.parse(response.data.response);
+  const parsed = extractJSON(response.data.response);
+
+  return parsed;
+}
+
+function extractJSON(raw) {
+  try {
+    return JSON.parse(raw);
+  } catch {}
+
+  try {
+    const cleaned = raw.trim();
+
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error("No JSON found");
+
+    const extracted = jsonMatch[0];
+
+    return JSON.parse(extracted);
+  } catch (e) {
+    console.log("FAILED RAW:", raw);
+    throw new Error("Invalid LLM JSON");
+  }
 }
 
 export default function Quiz({ route }) {
